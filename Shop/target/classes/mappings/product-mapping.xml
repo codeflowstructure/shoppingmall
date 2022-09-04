@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="ProductDAO">
+
+	<resultMap id="productResult" type="product">
+		<id property="prd_no" column="PRD_NO" />
+		<result property="prd_id" column="PRD_ID" />
+		<result property="prd_name" column="PRD_NAME" />
+		<result property="prd_type" column="PRD_TYPE" />
+		<result property="prd_option" column="PRD_OPTION" />
+		<result property="prd_size" column="PRD_SIZE" />
+		<result property="prd_color" column="PRD_COLOR" />
+		<result property="prd_price_1" column="PRD_PRICE_1" />
+		<result property="prd_price_2" column="PRD_PRICE_2" />
+		<result property="prd_desc" column="PRD_DESC" />
+		<result property="prd_image_path" column="PRD_IMAGE_PATH" />
+	</resultMap>
+	
+	<insert id="insertProduct" parameterType="product">
+		<![CDATA[
+		INSERT INTO SHOP_PRODUCT(PRD_NO, PRD_ID, PRD_NAME, PRD_TYPE, PRD_OPTION, PRD_SIZE, PRD_COLOR, PRD_PRICE_1, PRD_PRICE_2, PRD_DESC, PRD_IMAGE_PATH)
+		VALUES((SELECT NVL(MAX(PRD_NO), 0) + 1 FROM SHOP_PRODUCT),
+		(SELECT NVL(MAX(PRD_ID), 0) + 1 FROM SHOP_PRODUCT), 
+		#{prd_name}, #{prd_type}, #{prd_option}, #{prd_size}, #{prd_color}, #{prd_price_1}, #{prd_price_2}, #{prd_desc}, #{prd_image_path})
+		]]>
+	</insert>
+	
+	<update id="updateProduct">
+		<![CDATA[
+		UPDATE SHOP_PRODUCT SET
+		PRD_NAME = #{prd_name},
+		PRD_TYPE = #{prd_type},
+		PRD_OPTION = #{prd_option},
+		PRD_SIZE = #{prd_size},
+		PRD_COLOR = #{prd_color},
+		PRD_SIZE = #{prd_size},
+		PRD_PRICE_1 = #{prd_price_1},
+		PRD_PRICE_2 = #{prd_price_2},
+		PRD_DESC = #{prd_desc}
+		WHERE PRD_NO = #{prd_no}
+		]]>
+	</update>
+	
+	<delete id="deleteProduct">
+		<![CDATA[
+		DELETE SHOP_PRODUCT
+		WHERE PRD_NO = #{prd_no}
+		]]>
+	</delete>
+	
+	<select id="getProduct" resultType="product">
+		<![CDATA[
+		SELECT *
+		FROM SHOP_PRODUCT
+		WHERE PRD_NO = #{prd_no}
+		]]>
+	</select>
+	
+	<select id="getProductByPrd_Id" resultType="product">
+		<![CDATA[
+		SELECT *
+		FROM SHOP_PRODUCT
+		WHERE PRD_ID = #{prd_id}
+		]]>
+	</select>
+	
+	<select id="getProductList" resultMap="productResult">
+		<![CDATA[
+		SELECT *
+		FROM SHOP_PRODUCT
+		ORDER BY PRD_NO DESC
+		]]>
+	</select>
+	
+	<select id="getProductList_By_Prd_Type" resultMap="productResult">
+		<![CDATA[
+		SELECT *
+		FROM SHOP_PRODUCT
+		WHERE PRD_TYPE = #{prd_type} 
+		ORDER BY PRD_NO DESC 
+		]]>
+	</select>
+</mapper>

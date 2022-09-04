@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="AccountDAO">
+
+	<resultMap id="accountResult" type="account">
+		<id property="acc_no" column="ACC_NO" />
+		<result property="acc_id" column="ACC_ID" />
+		<result property="acc_pw" column="ACC_PW" />
+		<result property="acc_role" column="ACC_ROLE" />
+		<result property="cre_date" column="CRE_DATE" />
+		<result property="log_date" column="LOG_DATE" />
+		<result property="acc_points" column="ACC_POINTS" />
+		<result property="acc_address" column="ACC_ADDRESS" />
+		<result property="acc_phone_mobile" column="ACC_PHONE_MOBILE" />
+		<result property="acc_phone_home" column="ACC_PHONE_HOME" />
+	</resultMap>
+	
+	<insert id="insertAccount" parameterType="account">
+		<![CDATA[
+		INSERT INTO SHOP_ACCOUNT(ACC_NO, ACC_ID, ACC_PW, ACC_ROLE, CRE_DATE, LOG_DATE, ACC_POINTS, ACC_ADDRESS, ACC_PHONE_MOBILE, ACC_PHONE_HOME)
+		VALUES((SELECT NVL(MAX(ACC_NO), 0) + 1 FROM SHOP_ACCOUNT),
+		#{acc_id}, #{acc_pw}, 1000, SYSDATE, SYSDATE, 0, '', '', '')
+		]]>
+	</insert>
+	
+	<update id="updateAccount">
+		<![CDATA[
+		UPDATE SHOP_ACCOUNT SET
+		ACC_PW = #{acc_pw},
+		ACC_POINTS = #{acc_points},
+		ACC_ADDRESS = #{acc_address},
+		ACC_PHONE_MOBILE = #{acc_mobile},
+		ACC_PHONE_HOME = #{acc_home}
+		WHERE ACC_NO = #{acc_no}
+		]]>
+	</update>
+	
+	<update id="updateAccount_PW_Only">
+		<![CDATA[
+		UPDATE SHOP_ACCOUNT SET
+		ACC_PW = #{acc_pw}
+		WHERE ACC_NO = #{acc_no}
+		]]>
+	</update>
+	
+	<update id="updateAccount_Except_PW">
+		<![CDATA[
+		UPDATE SHOP_ACCOUNT SET
+		ACC_ADDRESS = #{acc_address},
+		ACC_PHONE_MOBILE = #{acc_phone_mobile},
+		ACC_PHONE_HOME = #{acc_phone_home}
+		WHERE ACC_NO = #{acc_no}
+		]]>
+	</update>
+	
+	<delete id="deleteAccount">
+		<![CDATA[
+		DELETE SHOP_ACCOUNT
+		WHERE ACC_NO = #{acc_no}
+		]]>
+	</delete>
+	
+	<select id="getAccount" resultType="account">
+		<![CDATA[
+		SELECT *
+		FROM SHOP_ACCOUNT
+		WHERE ACC_NO = #{acc_no}
+		]]>
+	</select>
+	
+	<select id="getAccountByAcc_Id" resultType="account">
+		<![CDATA[
+		SELECT *
+		FROM SHOP_ACCOUNT
+		WHERE ACC_ID = #{acc_id}
+		]]>
+	</select>
+	
+	<select id="getAccountList" resultMap="accountResult">
+		<![CDATA[
+		SELECT *
+		FROM SHOP_ACCOUNT
+		WHERE ACC_ROLE <> 1
+		ORDER BY ACC_NO ASC
+		]]>
+	</select>
+</mapper>

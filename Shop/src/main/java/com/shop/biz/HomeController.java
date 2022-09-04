@@ -36,4 +36,14 @@ public class HomeController {
 		return "home";
 	}
 	
+	/**
+	 * Simply selects the home view to render by returning its name.
+	 */
+	@RequestMapping(value = "/index", method = RequestMethod.GET)
+	public String index(Locale locale, Model model) {
+		
+		return "views_ver_1/index";
+	}
+	
+	
 }
